@@ -8,6 +8,7 @@
     "dev": "NODE_ENV=development nodemon server.js",
     "dev:local": "NODE_ENV=development nodemon server.js",
     "start:prod": "NODE_ENV=production node server.js",
+    "install:prod": "npm install --production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["nodejs", "express", "mysql", "api"],
