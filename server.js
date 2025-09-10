@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-require('dotenv').config();
+const config = require('./config/env');
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -11,7 +11,7 @@ const mitraRoutes = require('./routes/mitra');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT || 3000;
 
 // Security middleware
 app.use(helmet());
@@ -29,9 +29,9 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://yourdomain.com'] // Ganti dengan domain production
-    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:8080'],
+  origin: config.NODE_ENV === 'production' 
+    ? config.CORS_ORIGINS.split(',')
+    : config.CORS_ORIGINS.split(','),
   credentials: true
 }));
 
@@ -45,7 +45,8 @@ app.get('/health', (req, res) => {
     success: true,
     message: 'Server berjalan dengan baik',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: config.NODE_ENV || 'development',
+    base_url: config.BASE_URL
   });
 });
 
@@ -102,7 +103,7 @@ app.use((err, req, res, next) => {
   // Default error
   res.status(500).json({
     success: false,
-    message: process.env.NODE_ENV === 'production' 
+    message: config.NODE_ENV === 'production' 
       ? 'Terjadi kesalahan server' 
       : err.message
   });
@@ -111,9 +112,10 @@ app.use((err, req, res, next) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server berjalan di port ${PORT}`);
-  console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-  console.log(`📚 API Base URL: http://localhost:${PORT}/api`);
+  console.log(`📊 Environment: ${config.NODE_ENV || 'development'}`);
+  console.log(`🔗 Health check: ${config.BASE_URL}/health`);
+  console.log(`📚 API Base URL: ${config.BASE_URL}/api`);
+  console.log(`🗄️  Database: ${config.DB_NAME}@${config.DB_HOST}`);
 });
 
 // Graceful shutdown

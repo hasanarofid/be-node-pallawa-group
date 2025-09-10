@@ -1,8 +1,8 @@
--- Database schema untuk Pallawa Group
-CREATE DATABASE IF NOT EXISTS db_api_pallawa 
+-- Database schema untuk Pallawa Group Production
+CREATE DATABASE IF NOT EXISTS solz1468_api 
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
-USE db_api_pallawa;
+USE solz1468_api;
 
 -- Tabel Users (Customer)
 CREATE TABLE IF NOT EXISTS users (
